@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
+﻿using System;
+using System.Text;
 using CodeHelpers.Diagnostics;
 using CodeHelpers.Files;
 
@@ -14,13 +14,13 @@ namespace Tune
 			// writer.Write(0);
 			// int count = 0;
 			//
-			// foreach (string line in File.ReadLines("/Users/ghuang21/Things/Programming/C#/Tune/Tune/dictionary.txt"))
+			// foreach (string line in File.ReadLines("dictionary.txt"))
 			// {
 			// 	string[] slices = line.Split('"');
 			// 	if (slices.Length < 5) continue;
 			//
 			// 	char character = Regex.Unescape($@"\u{slices[1]}")[0];
-			// 	string[] tunes = slices[3].Split(',');
+			// 	string[] tunes = slices[3].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 			//
 			// 	if (tunes.Length == 0) continue;
 			//
@@ -34,14 +34,27 @@ namespace Tune
 			// writer.Seek(0, SeekOrigin.Begin);
 			// writer.Write(count);
 
-			using FileReader reader = new FileReader("../../../dictionary.words");
+			using FileReader reader = new FileReader("dictionary.words");
 
+			Console.OutputEncoding = Encoding.UTF8;
 			int count = reader.ReadInt32();
 
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < 900; i++)
 			{
+				char character = reader.ReadChar();
+				byte tunesCount = reader.ReadByte();
 
+				string[] tunes = new string[tunesCount];
+
+				for (int j = 0; j < tunesCount; j++)
+				{
+					tunes[j] = reader.ReadString();
+				}
+
+				DebugHelper.Log(character, tunes);
 			}
+
+			DebugHelper.Log(count);
 		}
 	}
 }
